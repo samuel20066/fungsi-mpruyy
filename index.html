@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warkop Tjahaja Abadi - Order</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-nav { background-color: #8B0000 !important; color: white !important; border-color: #8B0000 !important; }
+        .category-card { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 pb-32">
+
+    <header class="bg-[#8B0000] text-white p-6 rounded-b-[40px] shadow-2xl sticky top-0 z-50">
+        <div class="flex justify-between items-center max-w-2xl mx-auto">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-yellow-400 text-[#8B0000] text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Premium Order</span>
+                </div>
+                <h1 class="text-2xl font-black tracking-tight mt-1">TJAHAJA ABADI</h1>
+                <p class="text-xs font-medium opacity-80 uppercase tracking-[0.2em]"><i class="fas fa-map-marker-alt mr-1"></i> Meja 05 • Warkop Signature</p>
+            </div>
+            <div class="relative">
+                <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/30">
+                    <i class="fas fa-utensils text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="top-nav" class="flex overflow-x-auto p-4 gap-3 no-scrollbar sticky top-28 bg-slate-50/80 backdrop-blur-lg z-40">
+        </nav>
+
+    <main id="menu-container" class="px-4 max-w-2xl mx-auto space-y-10">
+        </main>
+
+    <div id="cart-bar" class="fixed bottom-6 left-4 right-4 hidden z-50">
+        <div class="max-w-md mx-auto bg-white p-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 flex justify-between items-center">
+            <div class="pl-2">
+                <span id="total-qty" class="text-[#8B0000] text-xs font-bold block">0 Item Terpilih</span>
+                <p id="total-price" class="text-xl font-black text-gray-900">Rp 0</p>
+            </div>
+            <button onclick="openPaymentModal()" class="bg-[#8B0000] hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-red-200">
+                Lanjut Pesan <i class="fas fa-arrow-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[60] flex items-end sm:items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 animate-slide-up">
+            <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+            <h2 class="text-2xl font-black text-gray-900 mb-2">Pilih Pembayaran</h2>
+            <p class="text-gray-500 text-sm mb-6">Selesaikan pesanan Anda dengan memilih salah satu metode di bawah ini.</p>
+            
+            <div class="space-y-3 mb-8">
+                <label class="flex items-center p-4 border-2 border-gray-100 rounded-2xl cursor-pointer hover:border-red-600 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-50">
+                    <input type="radio" name="payment" value="QRIS" class="hidden" checked>
+                    <div class="bg-blue-100 p-3 rounded-xl mr-4 text-blue-600"><i class="fas fa-qrcode text-xl"></i></div>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-800">QRIS / E-Wallet</p>
+                        <p class="text-xs text-gray-500">OVO, GoPay, Dana, LinkAja</p>
+                    </div>
+                    <i class="fas fa-check-circle text-red-600 hidden check-icon"></i>
+                </label>
+
+                <label class="flex items-center p-4 border-2 border-gray-100 rounded-2xl cursor-pointer hover:border-red-600 transition-all has-[:checked]:border-red-600 has-[:checked]:bg-red-50">
+                    <input type="radio" name="payment" value="CASH" class="hidden">
+                    <div class="bg-green-100 p-3 rounded-xl mr-4 text-green-600"><i class="fas fa-money-bill-wave text-xl"></i></div>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-800">Tunai (Cash)</p>
+                        <p class="text-xs text-gray-500">Bayar langsung di kasir</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 py-4 font-bold text-gray-500 rounded-2xl">Batal</button>
+                <button onclick="processOrder()" class="flex-[2] bg-[#8B0000] text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-200">Konfirmasi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            "Mie & Telur": [
+                { name: "Mie Dok Dok (Kuah)", price: 17000 },
+                { name: "Mie Habib (Goreng)", price: 17000 },
+                { name: "Mie Bangladesh", price: 20000 },
+                { name: "Mie Carbonara", price: 20000 },
+                { name: "Mie Ramen", price: 18000 },
+                { name: "Mie Double", price: 12000 },
+                { name: "Mie Polos", price: 8000 },
+                { name: "Omlet", price: 13000 }
+            ],
+            "Nasi": [
+                { name: "Nasi Dadar Cryspi", price: 13000 },
+                { name: "Nasi Ceplok Pontianak", price: 13000 },
+                { name: "Nasi Dadar Kornet", price: 15000 },
+                { name: "Nasi Dadar Kornet Sosis", price: 16000 },
+                { name: "Nasi Telur Orak Arik", price: 12000 },
+                { name: "Nasi Telur Negro", price: 12000 },
+                { name: "Nasi Mentega Telur Sosis", price: 18000 },
+                { name: "Magelangan", price: 20000 },
+                { name: "Magelangan Sosis", price: 22000 }
+            ],
+            "Roti Bakar": [
+                { name: "Roti Bakar Susu", price: 10000 },
+                { name: "Roti Bakar Coklat Susu", price: 12000 },
+                { name: "Roti Bakar Keju Susu", price: 15000 },
+                { name: "Roti Bakar Coklat Keju Susu", price: 17000 },
+                { name: "Roti Bakar Milo Keju Susu", price: 18000 },
+                { name: "Roti Bakar Oreo Keju Susu", price: 20000 },
+                { name: "Roti Bakar Matcha Keju Susu", price: 22000 }
+            ],
+            "Dimsum & Snack": [
+                { name: "Kentang Goreng", price: 10000 },
+                { name: "Mix Platter", price: 15000 },
+                { name: "Cireng Goreng", price: 13000 },
+                { name: "Dimsum Tjahyadi (4pcs)", price: 15000 },
+                { name: "Dimsum Chili Oil (4pcs)", price: 20000 },
+                { name: "Pangsit Rebus Chili Oil", price: 18000 },
+                { name: "Pangsit Goreng Chili Oil", price: 18000 }
+            ],
+            "Pancong": [
+                { name: "Pancong Susu", price: 10000 },
+                { name: "Pancong Coklat Susu", price: 12000 },
+                { name: "Pancong Keju Susu", price: 14000 },
+                { name: "Pancong Matcha Keju Susu", price: 18000 },
+                { name: "Pancong Ovomaltine Keju Susu", price: 20000 }
+            ],
+            "Ketan Susu": [
+                { name: "Ketan Original", price: 8000 },
+                { name: "Ketan Keju Susu", price: 12000 },
+                { name: "Ketan Milo Keju Susu", price: 15000 },
+                { name: "Ketan Oreo Keju Susu", price: 16000 }
+            ],
+            "Minuman": [
+                { name: "Badak", price: 22000 },
+                { name: "Coffee Beer", price: 17000 },
+                { name: "Kopi Susu Tjahyadi", price: 20000 },
+                { name: "Teh Manis (Dingin)", price: 7000 },
+                { name: "Susu Putih", price: 10000 },
+                { name: "Air Mineral", price: 5000 }
+            ]
+        };
+
+        let cart = {};
+
+        function renderUI() {
+            const container = document.getElementById('menu-container');
+            const nav = document.getElementById('top-nav');
+            
+            Object.keys(menuData).forEach((cat, index) => {
+                const catId = `cat-${index}`;
+                
+                // Render Nav
+                nav.innerHTML += `
+                    <button onclick="scrollToCategory('${catId}', this)" 
+                            class="nav-btn px-6 py-3 bg-white border-2 border-gray-100 rounded-2xl text-sm font-extrabold whitespace-nowrap transition-all shadow-sm text-gray-500 ${index === 0 ? 'active-nav' : ''}">
+                        ${cat}
+                    </button>
+                `;
+
+                // Render Section
+                let itemsHtml = '';
+                menuData[cat].forEach(item => {
+                    const itemId = item.name.replace(/\s+/g, '-').toLowerCase();
+                    itemsHtml += `
+                        <div class="bg-white p-4 rounded-[1.5rem] flex justify-between items-center shadow-sm border border-gray-50 hover:shadow-md transition-shadow group">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-800 group-hover:text-[#8B0000] transition-colors">${item.name}</h3>
+                                <p class="text-[#8B0000] font-black text-sm mt-1">Rp ${item.price.toLocaleString('id-ID')}</p>
+                            </div>
+                            <div class="flex items-center gap-3 bg-gray-50 p-1.5 rounded-xl">
+                                <button onclick="updateCart('${item.name}', -1, ${item.price})" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-gray-400 hover:text-red-600">-</button>
+                                <span id="qty-${itemId}" class="w-4 text-center font-bold text-gray-800 text-sm">0</span>
+                                <button onclick="updateCart('${item.name}', 1, ${item.price})" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#8B0000] text-white shadow-md shadow-red-100">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <section id="${catId}" class="scroll-mt-44">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-black text-gray-900 uppercase tracking-tight">${cat}</h2>
+                            <div class="h-1 flex-1 bg-gray-100 ml-4 rounded-full"></div>
+                        </div>
+                        <div class="grid gap-3">${itemsHtml}</div>
+                    </section>
+                `;
+            });
+        }
+
+        function scrollToCategory(id, btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            btn.classList.add('active-nav');
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateCart(name, change, price) {
+            const itemId = name.replace(/\s+/g, '-').toLowerCase();
+            if (!cart[name]) cart[name] = { qty: 0, price: price };
+            
+            cart[name].qty += change;
+            if (cart[name].qty < 0) cart[name].qty = 0;
+            if (cart[name].qty === 0) delete cart[name];
+
+            document.getElementById(`qty-${itemId}`).innerText = cart[name] ? cart[name].qty : 0;
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            let count = 0;
+            for (let item in cart) {
+                total += cart[item].qty * cart[item].price;
+                count += cart[item].qty;
+            }
+
+            const cartBar = document.getElementById('cart-bar');
+            if (count > 0) {
+                cartBar.classList.remove('hidden');
+                document.getElementById('total-qty').innerText = `${count} Menu dipilih`;
+                document.getElementById('total-price').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            } else {
+                cartBar.classList.add('hidden');
+            }
+        }
+
+        function openPaymentModal() {
+            document.getElementById('payment-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function processOrder() {
+            const method = document.querySelector('input[name="payment"]:checked').value;
+            let summary = `*PESANAN BARU - MEJA 05*\n--------------------------\n`;
+            let total = 0;
+            
+            for (let item in cart) {
+                summary += `• ${item} x${cart[item].qty}\n`;
+                total += cart[item].qty * cart[item].price;
+            }
+            
+            summary += `--------------------------\n*Total: Rp ${total.toLocaleString('id-ID')}*\n*Metode: ${method}*`;
+            
+            // Simulasi Berhasil
+            alert("Pesanan Diterima!\n\n" + summary + "\n\nSilakan tunjukkan layar ini ke kasir.");
+            location.reload(); 
+        }
+
+        window.onload = renderUI;
+    </script>
+</body>
+</html>
